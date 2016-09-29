@@ -39,10 +39,11 @@
         }
     }
 
+
     std::pair<lru_cache::iterator, bool> lru_cache::insert(value_type x) {
         if (find(x.first).data == end().data) {
             node* noda = (size < capacity) ? new node() :
-                                              erase_without_delete(root->next);
+                         erase_without_delete(root->next);
             node * temp = root;
             while (temp != nullptr) {
                 if (temp == root || temp->key > x.first) {
@@ -125,17 +126,65 @@
         }
         return iterator(temp);
     }
+
     lru_cache::iterator lru_cache::end() const {
         return iterator(root);
     }
-int main() {
-    lru_cache data(5);
 
-    std::cout << '\n';
-       std::cout << (data.insert(std::make_pair(1, 1)).second);
-       std::cout << (data.insert(std::make_pair(0, 0)).second);
-       std::cout << (data.insert(std::make_pair(6, 6)).second);
-    for (size_t i = 0; i < 10; i++) {
-        std::cout << (data.insert(std::make_pair(i, i)).second);
+    lru_cache::value_type lru_cache::iterator::operator*() {
+        return (std::make_pair(data->key, data->mapped));
     }
-}
+    lru_cache::node* lru_cache::iterator::before() {
+        node* temp = data;
+        if (data->left != nullptr) {
+            temp = data->left;
+            while (temp->right != nullptr) temp = temp->right;
+        } else {
+            while (temp->parent->left == temp) {
+                temp = temp->parent;
+            }
+            temp = temp->parent;
+        }
+        return temp;
+    }
+    lru_cache::node* lru_cache::iterator::next() {
+        node *temp = data;
+        if (data->right != nullptr) {
+            temp = data->right;
+            while (temp->left != nullptr) temp = temp->left;
+        } else {
+            while (temp->parent->right == temp) {
+                temp = temp->parent;
+            }
+            temp = temp->parent;
+        }
+        return temp;
+    }
+
+    lru_cache::iterator::iterator(lru_cache::node * data) {
+        this->data = data;
+    }
+
+    bool lru_cache::iterator::operator ==(lru_cache::iterator& a) {
+        return (a.data == this -> data);
+    }
+
+    lru_cache::iterator& lru_cache::iterator::operator++() {
+        this->data = this->next();
+        return *this;
+    }
+
+    lru_cache::iterator lru_cache::iterator::operator++(int) {
+        node* temp = this->next();
+        return iterator(temp);
+    }
+
+    lru_cache::iterator& lru_cache::iterator::operator--() {
+        this->data = this->before();
+        return *this;
+    }
+
+    lru_cache::iterator lru_cache::iterator::operator--(int) {
+        node* temp = this->before();
+        return iterator(temp);
+    }

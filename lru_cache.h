@@ -34,12 +34,15 @@ struct lru_cache
 
     struct iterator {
         node* data;
-        iterator(node* data) {
-            this->data = data;
-        }
-        bool operator ==(iterator& a) {
-            return (a.data == this -> data);
-        }
+        node* before();
+        node* next();
+        iterator(node* data);
+        bool operator ==(iterator& a);
+        value_type operator*();
+        iterator& operator++();
+        iterator operator++(int);
+        iterator& operator--();
+        iterator operator--(int);
     };
 
     node* erase_without_delete(node*);
