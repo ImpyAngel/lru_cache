@@ -40,81 +40,82 @@
     }
 
 
-    std::pair<lru_cache::iterator, bool> lru_cache::insert(value_type x) {
-        if (find(x.first).data == end().data) {
-            node* noda = (size < capacity) ? new node() :
-                         erase_without_delete(root->next);
-            node * temp = root;
-            while (temp != nullptr) {
-                if (temp == root || temp->key > x.first) {
-                    if (temp->left == nullptr) {
-                        temp -> left = noda;
-                        break;
-                    } else {
-                        temp = temp->left;
-                    }
+std::pair<lru_cache::iterator, bool> lru_cache::insert(value_type x) {
+    if (find(x.first).data == end().data) {
+        node* noda = (size < capacity) ? new node() :
+                     erase_without_delete(root->next);
+        node * temp = root;
+        while (temp != nullptr) {
+            if (temp == root || temp->key > x.first) {
+                if (temp->left == nullptr) {
+                    temp -> left = noda;
+                    break;
                 } else {
-                    if (temp->right == nullptr) {
-                        temp -> right = noda;
-                        break;
-                    } else {
-                        temp = temp->right;
-                    }
+                    temp = temp->left;
                 }
-            }
-            size++;
-            noda -> parent = temp;
-            noda ->left = nullptr;
-            noda ->right = nullptr;
-            noda->key = x.first;
-            noda->mapped = x.second;
-            noda->prev = root->prev;
-            noda->next = root;
-            root->prev = noda;
-            noda->prev->next = noda;
-            return std::make_pair( iterator(noda), true);
-        } else {
-            return std::make_pair(find(x.first), false);
-        }
-    }
-
-    lru_cache::node* lru_cache::erase_without_delete(lru_cache::node* v) {
-        size--;
-        v->next->prev = v->prev;
-        v->prev->next = v->next;
-        node ** father;
-        if (v->parent == root || v->key < v->parent->key)
-            father = &v->parent->left; else
-            father = &v->parent->right;
-        if (v->left == nullptr) {
-            *father = v->right;
-            if (v->right != nullptr) {
-                v->right->parent = v->parent;
-            }
-        } else {
-            if (v->right == nullptr) {
-                *father = v->left;
-                v->left->parent = v->parent;
             } else {
-                node* temp = v->right;
-                while (temp->left != nullptr) temp = temp->left;
-                if (temp->parent->left == temp) {
-                    temp->parent->left = temp->right;
+                if (temp->right == nullptr) {
+                    temp -> right = noda;
+                    break;
                 } else {
-                    temp->parent->right = temp->right;
+                    temp = temp->right;
                 }
-                if (temp->right != nullptr) {
-                    temp->right->parent = temp->parent;
-                }
-                *father = temp;
-                temp->left = v->left;
-                temp->right = v->right;
-                temp->parent = v->parent;
-                v->left->parent = temp;
             }
         }
-        return (v);
+        size++;
+        noda -> parent = temp;
+        noda ->left = nullptr;
+        noda ->right = nullptr;
+        noda->key = x.first;
+        noda->mapped = x.second;
+        noda->prev = root->prev;
+        noda->next = root;
+        root->prev = noda;
+        noda->prev->next = noda;
+        return std::make_pair( iterator(noda), true);
+    } else {
+        return std::make_pair(find(x.first), false);
     }
+}
+
+lru_cache::node* lru_cache::erase_without_delete(lru_cache::node* v) {
+    size--;
+    v->next->prev = v->prev;
+    v->prev->next = v->next;
+    node ** father;
+    if (v->parent == root || v->key < v->parent->key)
+        father = &(v->parent->left); else
+        father = &(v->parent->right);
+    if (v->left == nullptr) {
+        *father = v->right;
+        if (v->right != nullptr) {
+            v->right->parent = v->parent;
+        }
+    } else {
+        if (v->right == nullptr) {
+            *father = v->left;
+            v->left->parent = v->parent;
+        } else {
+            node* temp = v->right;
+            while (temp->left != nullptr) temp = temp->left;
+            if (temp->parent->left == temp) {
+                temp->parent->left = temp->right;
+            } else {
+                temp->parent->right = temp->right;
+            }
+            if (temp->right != nullptr) {
+                temp->right->parent = temp->parent;
+            }
+            *father = temp;
+            temp->left = v->left;
+            temp->right = v->right;
+            temp->parent = v->parent;
+            v->left->parent = temp;
+            v->right->parent = temp;
+        }
+    }
+    return (v);
+}
     void lru_cache::erase(lru_cache::iterator v) {
         delete(erase_without_delete(v.data));
     }
@@ -187,4 +188,22 @@
     lru_cache::iterator lru_cache::iterator::operator--(int) {
         node* temp = this->before();
         return iterator(temp);
+    }
+
+    int main() {
+    lru_cache data(5);
+        std::cout << '\n';
+        std::cout << (data.insert(std::make_pair(1, 1)).second);
+        std::cout << (data.insert(std::make_pair(0, 0)).second);
+        std::cout << (data.insert(std::make_pair(6, 6)).second);
+        std::cout << (data.insert(std::make_pair(2, 2)).second);
+        std::cout << (data.insert(std::make_pair(3, 3)).second);
+        std::cout << (data.insert(std::make_pair(4, 4)).second);
+        std::cout << (data.insert(std::make_pair(5, 5)).second);
+        std::cout << (data.insert(std::make_pair(6, 6)).second);
+        std::cout << (data.insert(std::make_pair(7, 7)).second);
+        std::cout << (data.insert(std::make_pair(8, 8)).second);
+        std::cout << (data.insert(std::make_pair(9, 9)).second);
+        std::cout << (data.insert(std::make_pair(10, 10)).second);
+        std::cout<<((*data.begin()).first);
     }
