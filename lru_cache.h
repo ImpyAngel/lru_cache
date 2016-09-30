@@ -5,9 +5,6 @@
 #ifndef LRU_CACHE_LRU_CACHE_H
 #define LRU_CACHE_LRU_CACHE_H
 
-#include <c++/utility>
-#include <c++/cstddef>
-
 struct lru_cache
 {
     typedef int key_type;
@@ -27,7 +24,6 @@ struct lru_cache
         node*        next;
         node*        prev;
     };
-
     node* root;
     size_t size;
     size_t capacity;
@@ -38,6 +34,7 @@ struct lru_cache
         node* next();
         iterator(node* data);
         bool operator ==(iterator& a);
+        bool operator !=(iterator& a);
         value_type operator*();
         iterator& operator++();
         iterator operator++(int);

@@ -170,13 +170,17 @@ lru_cache::node* lru_cache::erase_without_delete(lru_cache::node* v) {
         return (a.data == this -> data);
     }
 
+    bool lru_cache::iterator::operator !=(lru_cache::iterator& a) {
+        return (a.data != this -> data);
+    }
     lru_cache::iterator& lru_cache::iterator::operator++() {
         this->data = this->next();
         return *this;
     }
 
     lru_cache::iterator lru_cache::iterator::operator++(int) {
-        node* temp = this->next();
+        lru_cache::node* temp = this->data;
+        *this = iterator(this->next());
         return iterator(temp);
     }
 
@@ -186,24 +190,7 @@ lru_cache::node* lru_cache::erase_without_delete(lru_cache::node* v) {
     }
 
     lru_cache::iterator lru_cache::iterator::operator--(int) {
-        node* temp = this->before();
+        node* temp = this->data;
+        *this = iterator(this->next());
         return iterator(temp);
-    }
-
-    int main() {
-    lru_cache data(5);
-        std::cout << '\n';
-        std::cout << (data.insert(std::make_pair(1, 1)).second);
-        std::cout << (data.insert(std::make_pair(0, 0)).second);
-        std::cout << (data.insert(std::make_pair(6, 6)).second);
-        std::cout << (data.insert(std::make_pair(2, 2)).second);
-        std::cout << (data.insert(std::make_pair(3, 3)).second);
-        std::cout << (data.insert(std::make_pair(4, 4)).second);
-        std::cout << (data.insert(std::make_pair(5, 5)).second);
-        std::cout << (data.insert(std::make_pair(6, 6)).second);
-        std::cout << (data.insert(std::make_pair(7, 7)).second);
-        std::cout << (data.insert(std::make_pair(8, 8)).second);
-        std::cout << (data.insert(std::make_pair(9, 9)).second);
-        std::cout << (data.insert(std::make_pair(10, 10)).second);
-        std::cout<<((*data.begin()).first);
     }
