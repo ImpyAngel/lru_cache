@@ -190,6 +190,6 @@ lru_cache::node* lru_cache::erase_without_delete(lru_cache::node* v) {
 
     lru_cache::iterator lru_cache::iterator::operator--(int) {
         node* temp = this->data;
-        *this = iterator(this->next());
+        *this = iterator(this->before());
         return iterator(temp);
     }
