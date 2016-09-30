@@ -3,7 +3,7 @@
 //
 
 #ifndef LRU_CACHE_LRU_CACHE_H
-#define LRU_CACHE_LRU_CACHE_
+#define LRU_CACHE_LRU_CACHE_H
 
 #include <iostream>
 struct lru_cache
@@ -12,7 +12,6 @@ struct lru_cache
     typedef int mapped_type;
     // Вы можете определить эти тайпдефы по вашему усмотрению.
     typedef std::pair<key_type, mapped_type> value_type;
-//private:
     struct node
     {
         key_type     key;
@@ -29,25 +28,26 @@ struct lru_cache
     size_t size;
     size_t capacity;
 
+
+    node* erase_without_delete(node*);
+
+    void del(node*);
+    // Bidirectional iterator
+public:
     struct iterator {
         node* data;
         node* before();
         node* next();
-        iterator(node* data);
-        bool operator ==(iterator& a);
-        bool operator !=(iterator& a);
+        iterator(node*);
         value_type operator*();
         iterator& operator++();
         iterator operator++(int);
         iterator& operator--();
         iterator operator--(int);
+        bool operator==(const iterator) const;
+        bool operator!=(const iterator) const;
     };
 
-    node* erase_without_delete(node*);
-
-    void del(node*);
-public:
-    // Bidirectional iterator
 
     // Создает пустой lru_cache с указанной capacity.
     lru_cache(size_t capacity);
