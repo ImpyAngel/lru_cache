@@ -2,7 +2,6 @@
 // Created by Impy on 26.09.2016.
 //
 #include "lru_cache.h"
-#include <iostream>
 
     lru_cache::lru_cache(size_t capacity) {
         root = new node;

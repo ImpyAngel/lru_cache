@@ -3,8 +3,9 @@
 //
 
 #ifndef LRU_CACHE_LRU_CACHE_H
-#define LRU_CACHE_LRU_CACHE_H
+#define LRU_CACHE_LRU_CACHE_
 
+#include <iostream>
 struct lru_cache
 {
     typedef int key_type;
