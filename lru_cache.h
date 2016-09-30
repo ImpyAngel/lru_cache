@@ -8,10 +8,12 @@
 #include <iostream>
 struct lru_cache
 {
+
     typedef int key_type;
     typedef int mapped_type;
     // Вы можете определить эти тайпдефы по вашему усмотрению.
     typedef std::pair<key_type, mapped_type> value_type;
+private:
     struct node
     {
         key_type     key;
@@ -27,7 +29,6 @@ struct lru_cache
     node* root;
     size_t size;
     size_t capacity;
-
 
     node* erase_without_delete(node*);
 

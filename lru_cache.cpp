@@ -192,3 +192,6 @@ lru_cache::node* lru_cache::erase_without_delete(lru_cache::node* v) {
         *this = iterator(this->before());
         return iterator(temp);
     }
+int main() {
+
+}
